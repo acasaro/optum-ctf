@@ -32,9 +32,10 @@
 		}
 
 		function deleteAccount(accId) {
+			var escAccId = escape(accId);
 			$.ajax({
 				type: 'DELETE',
-				url: '/account/' + accId,
+				url: '/account/' + escAccId,
 				dataType: 'json',
 				contentType: 'application/json',
 				success: function (data) {
@@ -49,6 +50,7 @@
 		}
 
 		function exportTxns(accId) {
+			var escAccId = escape(accId);
 			$.ajax({
 				type: 'GET',
 				url: '/account/' + accId + '/txns',
