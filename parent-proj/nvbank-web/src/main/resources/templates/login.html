@@ -38,33 +38,33 @@
 
 <body>
 
-  <script type="text/javascript">
-      $(document).ready(function() {
-	      $('#loginform').submit(function () {
-			console.log("in func");
-			var data = {};
-			data['userName'] = $('#un').val();
-			data['password'] = $('#pw').val();
-			$.ajax({
-			  type: 'POST',
-			  url: '/sessions/login',
-			  dataType : 'json',
-			  contentType:'application/json',
-			  data : JSON.stringify(data),
-			  success : function () {
-			    console.log("success");
-			    window.location.replace('/dashboard');
-			    //alert("success");
-			  },
-			  error : function() {
-			    alert("incorrect username or password");
-			  }
-			});
-			
-			return false;
-	      });
-      });
-  </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#loginform').submit(function () {
+                console.log("in func");
+                var data = {};
+                data['userName'] = escape($('#un').val());
+                data['password'] = escape($('#pw').val());
+                $.ajax({
+                    type: 'POST',
+                    url: '/sessions/login',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function () {
+                        console.log("success");
+                        window.location.replace('/dashboard');
+                        //alert("success");
+                    },
+                    error: function () {
+                        alert("incorrect username or password");
+                    }
+                });
+
+                return false;
+            });
+        });
+    </script>
 
     <div class="container">
         <div class="row">
