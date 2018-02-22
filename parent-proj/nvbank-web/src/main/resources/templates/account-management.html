@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <div th:insert="fragments/header :: header"></div>
+</head>
+
+<body>
+	<script type="text/javascript">
+      function accDetailsRedir(userId) {
+		console.log("acc id: " + userId);
+		//window.location.replace('/dashboard');
+	  }
+  </script>
+
+	<div id="wrapper">
+    	<div th:insert="fragments/nav-admin :: nav"></div>
+	</div>
+	
+  <div id="page-wrapper">
+    <div class="row">
+      <div class="col-lg-12">
+        <h3 class="page-header">
+        Account Management
+        </h3>
+      </div>
+      <!-- /.col-lg-12 -->
+    </div>
+    
+    <!-- /.row -->
+    <div class="row">
+    
+      <div class="col-lg-10">
+      	<table class="table table-bordered table-striped table-hover">
+		  <thead>
+		    <tr>
+		      <th>Account Number</th>
+		      <th>Balance</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <tr th:each="acc : ${accountList}" th:onclick="'accDetailsRedir(\'' + ${acc.id} + '\');'">
+		      <th scope="row" th:utext="${acc.accountNumber}"></th>
+		      <td th:utext="${acc.balance}"></td>
+		    </tr>
+      	  </tbody>
+  		</table>
+        
+      </div>
+      <!-- /.col-lg-10 -->
+      
+    </div>
+    <!-- /.row -->
+    
+  </div>
+  <!-- /#page-wrapper -->
+  
+</body>
+
+</html>

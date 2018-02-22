@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <div th:insert="fragments/header :: header"></div>
+</head>
+
+<body>
+	<div id="wrapper">
+    	<div th:insert="fragments/nav :: nav"></div>
+	</div>
+	
+  <div id="page-wrapper">
+    <div class="row">
+      <div class="col-lg-12">
+        <h3 class="page-header">
+        Dashboard
+        </h3>
+      </div>
+      <!-- /.col-lg-12 -->
+    </div>
+    
+    <!-- /.row -->
+    <div class="row">
+    
+      <div class="col-lg-4">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <i class="fa fa-bar-chart-o fa-fw"></i> Bank Accounts
+          </div>
+          <!-- /.panel-heading -->
+          <div class="panel-body">
+            <div class="list-group">
+        	  <a href="#" class="list-group-item" th:each="acc : ${accountList}">
+		        <i class="fa fa-fw" th:text="${acc.accountNumber}"></i>
+                <span class="pull-right text-muted"><em th:text="${acc.balance}"> </em>
+                </span>
+		      </a>
+            </div>
+            <!-- /.list-group -->
+            <a href="/account-details" class="btn btn-default btn-block">Account Details</a>
+          </div>
+          <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+      </div>
+      <!-- /.col-lg-4 -->
+    </div>
+    <!-- /.row -->
+    
+  </div>
+  <!-- /#page-wrapper -->
+  
+</body>
+
+</html>

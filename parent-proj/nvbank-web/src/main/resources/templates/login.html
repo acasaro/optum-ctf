@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SB Admin 2 - Bootstrap Admin Theme</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="/static/css/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/static/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="/static/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- jQuery -->
+    <script src="/static/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/static/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="/static/js/metisMenu.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="/static/js/sb-admin-2.js"></script>
+</head>
+
+<body>
+
+  <script type="text/javascript">
+      $(document).ready(function() {
+	      $('#loginform').submit(function () {
+			console.log("in func");
+			var data = {};
+			data['userName'] = $('#un').val();
+			data['password'] = $('#pw').val();
+			$.ajax({
+			  type: 'POST',
+			  url: '/sessions/login',
+			  dataType : 'json',
+			  contentType:'application/json',
+			  data : JSON.stringify(data),
+			  success : function () {
+			    console.log("success");
+			    window.location.replace('/dashboard');
+			    //alert("success");
+			  },
+			  error : function() {
+			    alert("incorrect username or password");
+			  }
+			});
+			
+			return false;
+	      });
+      });
+  </script>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="login-panel panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Please Sign In</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form role="form" id="loginform">
+                            <fieldset>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Username" name="username" id="un" autofocus>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Password" name="password" type="password" id="pw">
+                                </div>
+                                <input type="submit" value="Login" class="btn btn-lg btn-success btn-block">
+                                <input type="submit" value="Register" class="btn btn-lg btn-success btn-block" onclick="window.location.replace('/register')">
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

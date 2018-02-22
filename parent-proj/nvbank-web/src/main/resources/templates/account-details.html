@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <div th:insert="fragments/header :: header"></div>
+</head>
+
+<body>
+	<script type="text/javascript">
+      function manageAccount(accId) {
+		console.log("acc id: " + accId);
+		$('#accId').val(accId);
+		
+		$.ajax({
+			type: 'GET',
+			url: '/account/'+accId+'/users',
+			dataType : 'json',
+			contentType:'application/json',
+			success : function (data) {
+				console.log(data);
+				var tbl = $('#userListTbl tbody');
+				tbl.empty();
+				$.each(data, function(index, bu) {
+					tbl.append("<tr><td>" + bu.firstName + "</td><td>" + bu.lastName + "</td><td>" + bu.userName + "</td></tr>");
+				});
+			},
+			error : function(data) {
+				alert("Error retrieving account data!");
+			}
+		});
+		
+		$('#accManagementModal').modal('show');
+	  }
+	  
+	  function deleteAccount() {
+	  	$.ajax({
+			type: 'DELETE',
+			url: '/account/'+$('#accId').val(),
+			dataType : 'json',
+			contentType:'application/json',
+			success : function (data) {
+				alert("Successfully deleted account");
+				$('#accManagementModal').modal('hide');
+				window.location.replace("/account-details");
+			},
+			error : function(data) {
+				alert("Error deleting account!");
+			}
+		});
+	  }
+	  
+	  function exportTxns() {
+	  	$.ajax({
+			type: 'GET',
+			url: '/account/'+$('#accId').val()+'/txns',
+			dataType : 'json',
+			contentType:'application/json',
+			success : function (data) {
+				//response with file name -> open pop up to download file (path traversal vuln)
+				console.log(data);
+				console.log(data.filename);
+				window.open('/account/txnexport?filename=' + data.filename);
+			},
+			error : function(data) {
+				alert("Error retrieving transaction history!");
+			}
+		});
+	  }
+  </script>
+  
+  <div class="modal fade" id="accManagementModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Edit Account</h4>
+      </div>
+      <div class="modal-body">
+      	<h4>Allowed Users</h4>
+      	<input type="hidden"></input>
+        <table class="table table-bordered table-striped table-hover" id="userListTbl">
+		  <thead>
+		    <tr>
+		      <th>First Name</th>
+		      <th>Last Name</th>
+		      <th>Username</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+      	  </tbody>
+  		</table>
+  		<input id="accId" type="hidden"></input>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onClick="exportTxns()">Download transaction history</button>
+        <button type="button" class="btn btn-primary" onClick="deleteAccount()">Delete bank account</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+	<div id="wrapper">
+    	<div th:insert="fragments/nav :: nav"></div>
+	</div>
+	
+  <div id="page-wrapper">
+    <div class="row">
+      <div class="col-lg-12">
+        <h3 class="page-header">
+        Account Management
+        </h3>
+      </div>
+      <!-- /.col-lg-12 -->
+    </div>
+    
+    <!-- /.row -->
+    <div class="row">
+    
+      <div class="col-lg-10">
+      	<table class="table table-bordered table-striped table-hover">
+		  <thead>
+		    <tr>
+		      <th>Account Number</th>
+		      <th>Balance</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <tr th:each="acc : ${accountList}" th:onclick="'manageAccount(\'' + ${acc.id} + '\');'">
+		      <th scope="row" th:utext="${acc.accountNumber}"></th>
+		      <td th:utext="${acc.balance}"></td>
+		    </tr>
+      	  </tbody>
+  		</table>
+        
+      </div>
+      <!-- /.col-lg-10 -->
+      
+    </div>
+    <!-- /.row -->
+    
+  </div>
+  <!-- /#page-wrapper -->
+  
+</body>
+
+</html>

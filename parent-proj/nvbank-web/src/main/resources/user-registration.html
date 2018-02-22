@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="file:///home/atticuss/Desktop/jquery.js"></script>
+  </head>
+  <body>
+  <script type="text/javascript">
+      $('#submit').click(function () {
+        console.log('in func');
+	var data = {};
+        data['firstname'] = $('#fn').val();
+        data['lastName'] = $('#ln').val();
+        data['userName'] = $('#un').val();
+        data['password'] = $('#pw').val();
+        data['ssn'] = $('#ssn').val();
+        $.ajax({
+          type: 'POST',
+          //url: 'http://localhost:8081/users',
+          url: 'foo',
+	  dataType : 'json',
+          contentType:'application/json',
+          data : JSON.stringify(data),
+          success : function (data) {
+            //window.location.replace('/scoreboard');
+            alert(data);
+          },
+          error : function(data) {
+            alert(data);
+          }
+        });
+      });
+  </script>
+    <form>
+      First name:<br>
+      <input type="text" id="fn" name="firstName" value="Jay"><br>
+      Last name:<br>
+      <input type="text" id="ln" name="lastName" value="Sea"><br>
+      Username:<br>
+      <input type="text" id="un" name="userName" value="jay.sea"><br>
+      Password:<br>
+      <input type="text" id="pw" name="password" value="Password1"><br>
+      Social Security Number:<br>
+      <input type="text" id="ssn" name="ssn" value="11-123-1234"><br><br>
+      <input type="button" id="submit" value="Submit">
+    </form>
+  </body>
+</html>

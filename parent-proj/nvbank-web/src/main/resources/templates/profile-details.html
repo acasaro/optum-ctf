@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <div th:insert="fragments/header :: header"></div>
+</head>
+
+<body>
+	<div id="wrapper">
+    	<div th:insert="fragments/nav :: nav"></div>
+	</div>
+	
+  <div id="page-wrapper">
+    <div class="row">
+      <div class="col-lg-12">
+        <h3 class="page-header">
+        Profile Details
+        </h3>
+      </div>
+      <!-- /.col-lg-12 -->
+    </div>
+    
+     <!-- /.row -->
+    <div class="row">
+      <div class="col-lg-8">
+	      <div class="panel panel-default">
+	          <div class="panel-heading">
+	            <i class="fa fa-vcard fa-fw"></i> Change Account Details
+	          </div>
+	          <!-- /.panel-heading -->
+	          <div class="panel-body">
+		        <form role="form">
+		            <fieldset>
+		                <div class="form-group">
+		                    <div id="d-fn">First Name</div>
+		                    <input class="form-control" name="first-name" id="fn" th:value="${bankuser.firstName}">
+		                </div>
+		                <div class="form-group">
+		                    <div id="d-ln">Last Name</div> 
+		                    <input class="form-control" name="last-name" id="ln" th:value="${bankuser.lastName}">
+		                <div>
+		                <div class="form-group">
+		                    <div id="d-id"/> 
+		                    <input type="hidden" class="form-control" name="id" id="uid" th:value="${bankuser.id}">
+		                </div>
+		                
+		                <a href="#" id="submit-update-profile" class="btn btn-lg btn-success btn-block">Update Account Details</a>
+		            </fieldset>
+		        </form>
+		        </div>
+		     </div>
+	      </div>
+	      <!-- /.col-lg-8 -->
+    </div>
+    <!-- /.row -->
+    
+    <!-- /.row -->
+    <div class="row">
+      <div class="col-lg-8">
+	      <div class="panel panel-default">
+	          <div class="panel-heading">
+	            <i class="fa fa-vcard fa-fw"></i> Change Password
+	          </div>
+	          <!-- /.panel-heading -->
+	          <div class="panel-body">
+		        <form role="form">
+		            <fieldset>
+		                <div class="form-group">
+		                    <input class="form-control" placeholder="Old Password" name="old-password" type="password" id="old-pw">
+		                </div>
+		                <div class="form-group">
+		                    <input class="form-control" placeholder="New Password" name="new-password" type="password" id="new-pw">
+		                </div>
+		                <div class="form-group">
+		                    <input class="form-control" placeholder="Confirm New Password" name="confirm-password" type="password" value="" id="confirm-pw">
+		                </div>
+		                <!-- Change this to a button or input when using this as a form -->
+		                <a href="#" id="submit-update-pw" class="btn btn-lg btn-success btn-block">Update Password</a>
+		            </fieldset>
+		        </form>
+		      </div>
+	      </div>
+	      <!-- /.col-lg-8 -->
+	   </div>
+    </div>
+    <!-- /.row -->
+    
+  </div>
+  <!-- /#page-wrapper -->
+  
+  <script type="text/javascript">
+      $(document).ready(function() {		
+	      $('#submit-update-profile').click(function () {
+			var data = {};
+			data['id'] = $('#uid').val();
+			data['firstName'] = $('#fn').val();
+			data['lastName'] = $('#ln').val();
+			console.log(data);
+			$.ajax({
+			  type: 'POST',
+			  url: '/users/' + data['id'],
+			  dataType : 'json',
+			  contentType:'application/json',
+			  data : JSON.stringify(data),
+			  success : function () {
+			    console.log("success");
+			    alert('Update successful!');
+			  },
+			  error : function() {
+			    alert("Sorry! An error occurred.");
+			  }
+			});
+	      });
+      });
+  </script>
+  
+</body>
+
+</html>
