@@ -24,6 +24,8 @@
 
   <modules>
     <module>nvbank-dao</module>
+    <module>nvbank-phase2-dao</module>
+    <module>nvbank-phase2-web</module>
     <module>nvbank-web</module>
   </modules>
 

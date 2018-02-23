@@ -8,8 +8,8 @@
     maxIdle="10"
     maxWait="15000"
     username="sa"
-    password="Summer2016"
-    url="jdbc:sqlserver://sql.team-c.nvisiumlabs.com:49775;databaseName=nvbank;"
+    password="Password1"
+    url="jdbc:sqlserver://nvbank-test-db.ck6fegjbupey.us-east-1.rds.amazonaws.com:1433;databaseName=nvbank;"
     removeAbandoned="true"
     removeAbandonedTimeout="30"
     logAbandoned="true" /> 

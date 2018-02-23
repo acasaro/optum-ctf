@@ -18,6 +18,12 @@ import com.nvbank.dao.ActiveSessionDao;
 import com.nvbank.dao.DefaultAccountDao;
 import com.nvbank.dao.AccountDao;
 
+import com.nvbank.dao.DefaultMessageDao;
+import com.nvbank.dao.MessageDao;
+
+import com.nvbank.dao.DefaultTicketDao;
+import com.nvbank.dao.TicketDao;
+
 @SpringBootApplication
 public class SpringBootWebApplication extends SpringBootServletInitializer {
 	
@@ -34,6 +40,16 @@ public class SpringBootWebApplication extends SpringBootServletInitializer {
 	@Bean
 	protected AccountDao accountDao() {
 		return new DefaultAccountDao();
+	}
+	
+	@Bean
+	protected MessageDao messageDao() {
+		return new DefaultMessageDao();
+	}
+	
+	@Bean
+	protected TicketDao ticketDao() {
+		return new DefaultTicketDao();
 	}
     
     @Bean

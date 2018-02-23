@@ -19,9 +19,9 @@
         <thymeleaf-layout-dialect.version>2.2.2</thymeleaf-layout-dialect.version>
 	</properties>
 
-  <artifactId>nvbank-web</artifactId>
-  <packaging>war</packaging>
-  <name>nVbank Webapp</name>
+  <artifactId>nvbank-phase2-web</artifactId>
+  <packaging>jar</packaging>
+  <name>nVbank Phase2 Webapp</name>
   <dependencies>
 		<dependency>
 			<groupId>com.nvbank.multiproj</groupId>
@@ -32,12 +32,6 @@
 		<dependency>
 			<groupId>com.nvbank.multiproj</groupId>
 			<artifactId>nvbank-phase2-dao</artifactId>
-			<version>1.0.RELEASE</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.nvbank.multiproj</groupId>
-			<artifactId>nvbank-phase2-web</artifactId>
 			<version>1.0.RELEASE</version>
 		</dependency>
 
@@ -126,20 +120,8 @@
 		    <version>4.2.3.RELEASE</version>
 		</dependency>
   </dependencies>
+  
   <build>
-    <finalName>nvbank-web</finalName>
-    <plugins>
-	<!-- Package as an executable jar/war -->
-	<plugin>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-maven-plugin</artifactId>
-	</plugin>
-
-	<plugin>
-	  <groupId>org.apache.maven.plugins</groupId>
-	  <artifactId>maven-resources-plugin</artifactId>
-	  <version>3.0.2</version>
-	</plugin>
-     </plugins>
+    <finalName>nvbank-phase2-web</finalName>
   </build>
 </project>

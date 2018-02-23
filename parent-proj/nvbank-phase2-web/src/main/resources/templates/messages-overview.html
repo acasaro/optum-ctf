@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <div th:insert="fragments/header :: header"></div>
+</head>
+
+<body>
+	<script type="text/javascript">
+      function readMsg(msgId) {
+		console.log("msg id: " + msgId);
+		
+		$.ajax({
+			type: 'GET',
+			url: '/messages/'+msgId,
+			dataType : 'json',
+			contentType:'application/json',
+			success : function (data) {
+				console.log(data);
+				$('#id-div').html(data.id);
+				$('#from-div').html('<b>From:</b> ' + data.fromUserName);
+				$('#subj-div').html('<b>Subject:</b> ' + data.subject);
+				$('#body-div').html(data.body);
+				
+				$('#msg-subj').val(data.subject);
+				$('#msg-from-id').val(data.toUserId);
+			},
+			error : function(data) {
+				alert("Error retrieving message data");
+			}
+		});
+		
+		$('#sendMessageModal').modal('hide');
+		$('#messageManagementModal').modal('show');
+		
+		$.ajax({
+			type: 'GET',
+			url: '/messages/'+msgId+'/read',
+			dataType : 'json',
+			contentType:'application/json',
+			success : function (data) {},
+			error : function(data) {}
+		});
+	  }
+	  
+	  function deleteMsg() {
+	  	console.log('deleting message');
+	  	
+	  	var msgId = $('#id-div').html();
+	  	console.log('msg id: ' + msgId);
+	  	
+	  	$.ajax({
+			type: 'DELETE',
+			url: '/messages/'+msgId,
+			dataType : 'json',
+			contentType:'application/json',
+			success : function (data) {
+				alert('Successfully deleted message!');
+				$('#messageManagementModal').modal('hide');
+			},
+			error : function(data) {
+				alert('Error delete message!');
+			}
+		});
+	  }
+	  
+	  function replyMsg() {
+	  	$('#messageManagementModal').modal('hide');
+	  	$('#sendMessageModal').modal('show');
+	  }
+	  
+	  function sendMsg() {
+	  	console.log('sending msg');
+	  	
+	  	var data = {};
+		data['toUserId'] = $('#msg-to-id').val();
+		data['fromUserId'] = $('#msg-from-id').val();
+		data['subject'] = $('#msg-subj').val();
+		data['body'] = $('#msg-body').val();
+		
+	  	$.ajax({
+			type: 'POST',
+			url: '/messages/',
+			data: JSON.stringify(data),
+			dataType : 'json',
+			contentType:'application/json',
+			success : function (data) {
+				console.log(data);
+				alert('Message successfully sent!');
+				
+				$('#messageManagementModal').modal('hide');
+				$('#sendMessageModal').modal('hide');
+			},
+			error : function(data) {
+				alert("Error sending message!");
+				
+				$('#messageManagementModal').modal('hide');
+				$('#sendMessageModal').modal('hide');
+			}
+		});
+	  }
+  </script>
+
+  <div id="wrapper">
+	<div th:insert="fragments/nav :: nav"></div>
+  </div>
+  
+  <div class="modal fade" id="messageManagementModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Message Details</h4>
+      </div>
+      <div class="modal-body">
+        <div style="border:1px solid black;" id="from-div"></div>
+        <div style="border:1px solid black;" id="subj-div"></div>
+        <div style="border:1px solid black;" id="body-div"></div>
+        <div style="display: none;" id="id-div"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onClick="deleteMsg()">Delete message</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+  
+  <div class="modal fade" id="sendMessageModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Send Message</h4>
+      </div>
+      <div class="modal-body">
+        <form role="form">
+            <fieldset>
+                <div class="form-group">
+                    <div id="d-fn">Subject</div>
+                    <input class="form-control" name="subject" id="msg-subj">
+                </div>
+                <div class="form-group">
+                    <div id="d-ln">Body</div>
+                    <textarea name="msg-body" style="width:100%; height:300px;"></textarea> 
+                <div>
+                <input type="hidden" id="msg-to-id">
+                <input type="hidden" id="msg-from-id">
+            </fieldset>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onClick="sendMsg()">Send</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+	
+  <div id="page-wrapper">
+    <div class="row">
+      <div class="col-lg-12">
+        <h3 class="page-header">
+        Messages
+        </h3>
+      </div>
+      <!-- /.col-lg-12 -->
+    </div>
+    
+    <!-- /.row -->
+    <div class="row">
+    
+      <div class="col-lg-10">
+      	<table class="table table-bordered table-striped table-hover">
+		  <thead>
+		    <tr>
+		      <th>Subject</th>
+		      <th>From</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <tr th:each="msg : ${messageList}" th:onclick="'readMsg(\'' + ${msg.id} + '\');'">
+		      <th scope="row" th:utext="${msg.subject}"></th>
+		      <td th:utext="${msg.fromUserName}"></td>
+		    </tr>
+      	  </tbody>
+  		</table>
+        
+      </div>
+      <!-- /.col-lg-10 -->
+      
+    </div>
+    <!-- /.row -->
+    
+  </div>
+  <!-- /#page-wrapper -->
+  
+</body>
+
+</html>

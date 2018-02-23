@@ -8,6 +8,7 @@
 <body>
 	<script type="text/javascript">
       function manageAccount(accId) {
+		console.log("acc id: " + accId);
 		$('#accId').val(accId);
 		
 		$.ajax({
@@ -31,10 +32,10 @@
 		$('#accManagementModal').modal('show');
 	  }
 	  
-	  function deleteAccount(accId) {
+	  function deleteAccount() {
 	  	$.ajax({
 			type: 'DELETE',
-			url: '/account/'+ accId,
+			url: '/account/'+$('#accId').val(),
 			dataType : 'json',
 			contentType:'application/json',
 			success : function (data) {
@@ -48,10 +49,10 @@
 		});
 	  }
 	  
-	  function exportTxns(accId) {
+	  function exportTxns() {
 	  	$.ajax({
 			type: 'GET',
-			url: '/account/'+accId+'/txns',
+			url: '/account/'+$('#accId').val()+'/txns',
 			dataType : 'json',
 			contentType:'application/json',
 			success : function (data) {
@@ -92,8 +93,8 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onClick="exportTxns(${acc.id})">Download transaction history</button>
-        <button type="button" class="btn btn-primary" onClick="deleteAccount(${acc.id})">Delete bank account</button>
+        <button type="button" class="btn btn-primary" onClick="exportTxns()">Download transaction history</button>
+        <button type="button" class="btn btn-primary" onClick="deleteAccount()">Delete bank account</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -112,7 +113,7 @@
       </div>
       <!-- /.col-lg-12 -->
     </div>
-
+    
     <!-- /.row -->
     <div class="row">
     

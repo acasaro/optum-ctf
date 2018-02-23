@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <div th:insert="fragments/header :: header"></div>
+</head>
+
+<body>
+	<script type="text/javascript">
+	  function createNewTicket() {
+		$('#ticketManagementModal').modal('hide');
+	  	$('#openNewTicketModal').modal('show');
+	  }
+	  
+	  function ticketDetails(ticketId) {
+	  	$.ajax({
+			type: 'GET',
+			url: '/tickets/'+ticketId,
+			dataType : 'json',
+			contentType:'application/json',
+			success : function (data) {
+				console.log(data);
+				
+				$('#tkt-body').html(data.body);
+				$('#tkt-response').html(data.response);
+				$('#tkt-id').html(data.id);
+			},
+			error : function(data) {
+				alert("Error retrieving ticket data");
+			}
+		});
+	  
+	  
+	  	$('#ticketManagementModal').modal('show');
+	  	$('#openNewTicketModal').modal('hide');
+	  }
+	  
+	  function createTicket() {
+	  	console.log('sending msg');
+	  	
+	  	var data = {};
+		data['body'] = $('#ticket-body').val();
+		
+	  	$.ajax({
+			type: 'POST',
+			url: '/tickets/',
+			data: JSON.stringify(data),
+			dataType : 'json',
+			contentType:'application/json',
+			success : function (data) {
+				console.log(data);
+				var ticket_id = data.id;
+				
+				if ($('#file-select')[0].files.length > 0) {
+					var formData = new FormData();
+					var file = $('#file-select')[0].files[0];
+					formData.append('attachment', file, file.name); 
+					console.log('sending file upload');
+					
+					$.ajax({
+						type: 'POST',
+						url: '/tickets/' + ticket_id + '/attachment',
+						data: formData,
+						dataType : 'json',
+						processData: false,
+						contentType: false,
+						cache: false,
+						success : function (data) {
+							console.log(data);
+							alert('Successfully submitted help desk ticket!');
+						},
+						error: function (data) {
+							alert('Error submitting attachment!');
+						}
+					});
+				}
+				else { alert('Successfully submitted help desk ticket!'); }
+				
+				$('#ticketManagementModal').modal('hide');
+				$('#openNewTicketModal').modal('hide');
+			},
+			error : function(data) { alert("Error creating help desk ticket!");	}
+		});
+	  }
+	  
+	  function closeTicket() {
+	  	var ticketId = $('#tkt-id').html();
+	  	$.ajax({
+			type: 'GET',
+			url: '/tickets/' + ticketId + '/resolved',
+			contentType:'application/json',
+			success : function (data) {
+				alert("Successfully marked ticket as resolved!");
+
+				$('#ticketManagementModal').modal('hide');
+				$('#submitResponseModal').modal('hide');
+			},
+			error : function(data) { alert("Error marking ticket as resolved!");	}
+		});
+	  }
+  </script>
+
+  <div id="wrapper">
+	<div th:insert="fragments/nav :: nav"></div>
+  </div>
+  
+  <div class="modal fade" id="ticketManagementModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Ticket Details</h4>
+      </div>
+      <div class="modal-body">
+      	<b> Ticket Body </b> </br>
+        <div style="border:1px solid black;" id="tkt-body"></div>
+        <b> Admin Response </b></br>
+        <div style="border:1px solid black;" id="tkt-response"></div>
+        <div style="display: none;" id="tkt-id"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onClick="closeTicket()">Mark Resolved</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+  
+  <div class="modal fade" id="openNewTicketModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Open New Ticket</h4>
+      </div>
+      <div class="modal-body">
+        <form role="form">
+            <fieldset>
+                <div class="form-group">
+                    <textarea id="ticket-body" style="width:100%; height:300px;"></textarea> 
+                <div>
+                <div class="form-group">
+                    <input type="file" name="attachment" id="file-select">
+                <div>                
+            </fieldset>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onClick="createTicket()">Send</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+	
+  <div id="page-wrapper">
+    <div class="row" style="display: flex; align-items: center;">
+      <div class="col-lg-9">
+        <h3 class="page-header">
+        Submitted Tickets
+        </h3>
+      </div>
+      <!-- /.col-lg-9 -->
+      <div class="col-lg-3">
+      	<button type="button" class="btn btn-primary" onClick="createNewTicket()">Open New Ticket</button>
+      </div>
+      <!-- /.col-lg-3 -->
+    </div>
+    
+    <!-- /.row -->
+    <div class="row">
+    
+      <div class="col-lg-10">
+      	<table class="table table-bordered table-striped table-hover">
+		  <thead>
+		    <tr>
+		      <th>Submitted Tickets</th>
+		      <th>Resolved</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <tr th:each="ticket : ${ticketList}" th:onclick="'ticketDetails(\'' + ${ticket.id} + '\');'">
+		      <th style="width:85%" scope="row" th:utext="${ticket.body}"></th>
+		      <td style="width:15%" th:switch="${ticket.resolved}">
+		      	<i th:case="false" class="fa fa-square-o fa-fw"></i>
+		      	<i th:case="true"class="fa fa-check-square-o fa-fw"></i>
+		      </td>
+		    </tr>
+      	  </tbody>
+  		</table>
+        
+      </div>
+      <!-- /.col-lg-10 -->
+      
+    </div>
+    <!-- /.row -->
+    
+  </div>
+  <!-- /#page-wrapper -->
+  
+</body>
+
+</html>
