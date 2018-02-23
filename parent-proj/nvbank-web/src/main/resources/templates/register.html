@@ -38,35 +38,36 @@
 
 <body>
 
-  <script type="text/javascript">
-      $(document).ready(function() {
-	      $('#registerform').submit(function () {
-			console.log("in func");
-			var data = {};
-			data['firstName'] = $('#fn').val();
-			data['lastName'] = $('#ln').val();
-			data['ssn'] = $('#ssn').val();
-			data['userName'] = $('#un').val();
-			data['password'] = $('#pw').val();
-			$.ajax({
-			  type: 'POST',
-			  url: '/users/',
-			  dataType : 'json',
-			  contentType:'application/json',
-			  data : JSON.stringify(data),
-			  success : function () {
-			    alert("Account successfully registered!");
-			    window.location.replace('/login');
-			  },
-			  error : function() {
-			    alert("User creation failed!");
-			  }
-			});
-			
-			return false;
-	      });
-      });
-  </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#registerform').submit(function () {
+                console.log("in func");
+                var data = {};
+                data['firstName'] = escape($('#fn').val());
+                data['lastName'] = escape($('#ln').val());
+                data['ssn'] = escape($('#ssn').val());
+                data['userName'] = escape($('#un').val());
+                data['password'] = escape($('#pw').val());
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/users/',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function () {
+                        alert("Account successfully registered!");
+                        window.location.replace('/login');
+                    },
+                    error: function () {
+                        alert("User creation failed!");
+                    }
+                });
+
+                return false;
+            });
+        });
+    </script>
 
     <div class="container">
         <div class="row">
@@ -78,7 +79,7 @@
                     <div class="panel-body">
                         <form role="form" id="registerform">
                             <fieldset>
-                            	<div class="form-group">
+                                <div class="form-group">
                                     <input class="form-control" placeholder="Firstname" name="firstname" id="fn" autofocus>
                                 </div>
                                 <div class="form-group">

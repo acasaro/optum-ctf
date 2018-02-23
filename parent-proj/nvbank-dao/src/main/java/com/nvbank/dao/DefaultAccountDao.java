@@ -349,7 +349,7 @@ public class DefaultAccountDao implements AccountDao {
     	ResultSet resultSet = null;
     	PreparedStatement pstmt = null;
     	boolean result = false;
-    	
+    	/*
     	try
     	{
 	    	connection = ds.getConnection();  	
@@ -376,7 +376,7 @@ public class DefaultAccountDao implements AccountDao {
     		try { resultSet.close(); } catch (Exception e) {}
     		try { pstmt.close(); } catch (Exception e) {}
     	}
-    	
+*/
     	return result;	
     }
     
